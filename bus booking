@@ -1,0 +1,129 @@
+package TRAVEL;
+
+public class BUS 
+{
+	private int bno;
+	private boolean ac;
+	private int cap;
+	
+	BUS(int a,boolean b,int c)
+	{
+		this.bno = a;
+		this.ac = b;
+		this.cap = c;
+	}
+	
+	public int get_bno()
+	{
+		return bno;
+	}
+	
+	public boolean get_ac()
+	{
+		return ac;
+	}
+	
+	public int get_cap()
+	{
+		return cap;
+	}
+	
+	public void display()
+	{
+		System.out.println("------------");
+		System.out.println("Bus no:"+bno);
+		System.out.println("Ac:"+ac);
+		System.out.println("capacity:"+cap);
+	}
+}
+package TRAVEL;
+import java.util.*;
+public class MASTER 
+{
+	public static void main(String[] args)
+	{
+		ArrayList<BUS> Buses = new ArrayList<>();
+		ArrayList<BOOKING> Bookings = new ArrayList<>();
+		
+		Buses.add(new BUS(1,true,30));
+		Buses.add(new BUS(1,true,20));
+		Buses.add(new BUS(1,true,5));
+		
+		for(BUS b:Buses)
+		{
+			b.display();
+		}
+		Scanner sc = new Scanner(System.in);
+		int ch = 1;
+		while(ch==1)
+		{
+			System.out.println("Enter 1 to book,2 to exit");
+			ch = sc.nextInt();
+			if(ch==1)
+			{
+				BOOKING book = new BOOKING(sc);
+				
+				if(book.isavaliable(Buses,Bookings))
+				{
+					System.out.println("booked");
+					Bookings.add(book);
+				}
+				else
+				{
+					System.out.println("not available");
+				}
+			}
+		}
+		sc.close();
+	}
+}
+package TRAVEL;
+import java.util.*;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
+public class BOOKING 
+{
+	String name;
+	int busno;
+	Date date;
+	
+	BOOKING(Scanner sc)
+	{
+		System.out.println("Name of the passanger:");
+		name = sc.next();
+		System.out.println("Bus no:");
+		busno = sc.nextInt();
+		System.out.println("Enter the date(dd-mm-yyyy):");
+		String n = sc.next();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+		
+		try
+		{
+			date=sdf.parse(n);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+		public boolean isavaliable(ArrayList<BUS> Buses,ArrayList<BOOKING> Bookings) 
+		{
+			int booked =0;
+			int capacity=0;
+			for(BUS bb:Buses)
+			{
+				if(bb.get_bno()==busno)
+				{
+					capacity = bb.get_cap();
+				}
+			}
+			for(BOOKING aa : Bookings)
+			{
+				if(aa.busno==busno && aa.date.equals(date))
+				{
+					booked++;
+				}
+			}
+			return booked<capacity;
+		}
+}
